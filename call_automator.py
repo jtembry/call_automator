@@ -12,7 +12,8 @@ import getpass
 parser = argparse.ArgumentParser(description='Flags for Redux tools, video calls, or headless Chrome')
 parser.add_argument('--redux', action="store_const", dest='redux', default=0, const='./resources/Redux-DevTools_v2.17.0.crx')
 parser.add_argument('--video', action="store_const", dest='video', default=0, const="//button[@id='btnVideo070']")
-parser.add_argument('--headless', action="store_const", dest='headless', default=0, const="//button[@id='btnVideo070']")
+parser.add_argument('--headless', action="store_const", dest='headless', default=0, const="headless")
+parser.add_argument('--taco', action="store_const", dest="taco", default=0, const='use-file-for-fake-video-capture=./resources/taco.mjpeg')
 args = parser.parse_args()
 
 def initialize():
@@ -58,18 +59,18 @@ def login(website, calls, username, password):
 	    "profile.default_content_setting_values.geolocation": 1, 
 	    "profile.default_content_setting_values.notifications": 1 
 		})
-	# For Redux Dev Tool --redux
+
 	if args.redux != 0:
 		options.add_extension(args.redux)
 		print("Redux Tools On")
-	# For Headless --headless
 	if args.headless != 0:
-		options.add_extension(args.headless)
+		options.add_argument(args.headless)
 		print("Running Headless")
+	if args.taco != 0:
+		options.add_argument(args.taco)
+		print("Taco Time")
 
-	driver = webdriver.Chrome(
-        executable_path = '/bin/chromedriver', chrome_options = options
-    )
+	driver = webdriver.Chrome(executable_path = '/bin/chromedriver', chrome_options = options)
 	wait = WebDriverWait(driver, 15)
 	driver.get(website)
 	time.sleep(1)
@@ -93,16 +94,15 @@ def login(website, calls, username, password):
 	submitButton = wait.until(EC.visibility_of_element_located((By.ID, "submitButton")))
 	submitButton.send_keys(Keys.RETURN)
 	try:
-		makeCalls(driver, calls, action_chains)
+		makeCalls(driver, calls, action_chains, wait)
 	finally:
 		endTest(driver,0)
 
 
-def makeCalls(driver, calls, action_chains):
+def makeCalls(driver, calls, action_chains, wait):
 	print('MAKING CALLS')
 	time.sleep(1)
 	counter = 0
-	wait = WebDriverWait(driver, 20)
 	start_time = 0
 	for x in range(int(calls)):
 		last_start_time = start_time
