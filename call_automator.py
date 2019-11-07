@@ -100,6 +100,7 @@ def login(website, calls, username, password):
 
 
 def makeCalls(driver, calls, action_chains, wait):
+	input('press any button to make calls')
 	print('MAKING CALLS')
 	time.sleep(1)
 	counter = 0
@@ -132,6 +133,7 @@ def makeCalls(driver, calls, action_chains, wait):
 	endTest(driver,counter)
 
 def endTest(driver, counter):
+	input('press any button to close')
 	print('Calls made: ', counter)
 	driver.quit()
 	driver.close()
