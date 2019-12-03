@@ -108,6 +108,8 @@ def makeCalls(driver, calls, action_chains, wait):
 	for x in range(int(calls)):
 		last_start_time = start_time
 		print('Call number: ', counter)
+		languageInput = wait.until(EC.visibility_of_element_located((By.ID, "srchLanguages")))
+		languageInput.send_keys('Spanish')
 		action_chains = ActionChains(driver)
 		if args.video != 0:
 			btnVideo = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[starts-with(@id, 'btnVideo')]")))
@@ -130,6 +132,7 @@ def makeCalls(driver, calls, action_chains, wait):
 		btnEnd.click()
 		counter += 1
 		print('difference between call start times: ', start_time - last_start_time)
+		time.sleep(2)
 	endTest(driver,counter)
 
 def endTest(driver, counter):
